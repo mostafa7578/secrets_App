@@ -38,6 +38,11 @@ public class UserService {
     String AdminPassword = "SecreTs";
 
     public String register(UserDTO userDTO) {
+        Optional<User> userExists = userRepository.findByEmail(userDTO.getEmail());
+        if (userExists.isPresent()) {
+            return "User already exists";
+        }
+
         User user = User.builder()
                 .email(userDTO.getEmail())
                 .password(userDTO.getPassword())
