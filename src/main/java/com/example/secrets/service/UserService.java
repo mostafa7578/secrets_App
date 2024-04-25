@@ -9,7 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.example.secrets.dto.UserDTO;
 import com.example.secrets.repo.BlackListRepository;
-import com.example.secrets.repo.LoginUsers;
+import com.example.secrets.repo.LoginUsersRepository;
 import com.example.secrets.repo.UserRepository;
 
 import model.BlackList;
@@ -26,7 +26,7 @@ public class UserService {
     private BlackListRepository blackListRepository;
 
     @Autowired
-    private LoginUsers loginUsers;
+    private LoginUsersRepository loginUsers;
 
     Integer otp1 = 836295;
     Integer otp2 = 638046;

@@ -8,7 +8,7 @@ import org.springframework.stereotype.Repository;
 import model.LoginUser;
 
 @Repository
-public interface LoginUsers extends MongoRepository<LoginUser, String>{
+public interface LoginUsersRepository extends MongoRepository<LoginUser, String>{
 
     Optional<LoginUser> findByOtp(String otp);
 }

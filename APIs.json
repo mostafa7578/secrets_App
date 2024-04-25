@@ -1,0 +1,80 @@
+Admin Endpoints:
+1. Set Secret
+Endpoint: POST /secret
+Request Body:
+json
+   
+{
+  "secret": "your_secret_here"
+}
+Response:
+json
+"Secret set successfully"
+
+2. Block User
+Endpoint: POST /block/user
+Request Body:
+json
+   
+{
+  "email": "user@example.com"
+}
+Response:
+json   
+"User blocked successfully"
+
+User Endpoints:
+1. Register User
+Endpoint: POST /register
+Request Body:
+json
+   
+{
+  "email": "user@example.com",
+  "password": "password123",
+  "name": "User Name"
+}
+Response:
+json   
+"User registered successfully"
+
+2. Login
+Endpoint: POST /login
+Request Body:
+json
+   
+{
+  "email": "user@example.com",
+  "password": "password123",
+  "otp": "123456" // OTP can be one of the predefined values: 836295, 638046, 138356, 501486, 730149
+}
+Response:
+json   
+"User logged in successfully"
+
+3. Logout
+Endpoint: POST /logout
+Request Body:
+json
+   
+{
+  "otp": "123456" // OTP used for login
+}
+Response:
+json   
+"User logged out successfully"
+
+4. Forgot Password
+Endpoint: POST /forgotPassword
+Request Body:
+json
+   
+{
+  "email": "user@example.com",
+  "password": "new_password123",
+  "otp": "123456" // OTP can be one of the predefined values: 836295, 638046, 138356, 501486, 730149
+}
+Response:
+json
+"Password updated successfully"
+

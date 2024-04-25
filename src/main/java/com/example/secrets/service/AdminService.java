@@ -1,14 +1,18 @@
 package com.example.secrets.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 
 import com.example.secrets.dto.UserDTO;
 import com.example.secrets.repo.BlackListRepository;
+import com.example.secrets.repo.LoginUsersRepository;
 
 import model.BlackList;
+import model.LoginUser;
 import model.User;
 
 @Service
@@ -18,6 +22,9 @@ public class AdminService {
 
     @Autowired
     private BlackListRepository blackListRepository;
+
+    @Autowired
+    private LoginUsersRepository loginUsersRepository;
 
     public String secret(String secret) {
 
@@ -46,6 +53,10 @@ public class AdminService {
         blackListRepository.save(blackList);
 
         return "User blocked successfully";
+    }
+
+    public ResponseEntity<List<LoginUser>> users() {
+        return ResponseEntity.ok(loginUsersRepository.findAll());
     }
 
 }
