@@ -68,11 +68,12 @@ public class UserService {
                     if (blackList.isPresent()) {
                         return "User is blacklisted";
                     }
-                    Optional<LoginUser> login = loginUsersRepository.findByOtp(userDTO.getEmail());
+                    Optional<LoginUser> login = loginUsersRepository.findByOtp(userDTO.getOtp());
                     if (login.isPresent()) {
                         return "User is already logged in";
                     }
-                    loginUsersRepository.save(LoginUser.builder().otp(userDTO.getOtp()).email(userDTO.getEmail()).build());
+                    loginUsersRepository
+                            .save(LoginUser.builder().otp(userDTO.getOtp()).email(userDTO.getEmail()).build());
                     return "User logged in successfully";
                 }
             }
