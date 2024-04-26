@@ -19,6 +19,4 @@ public class BlackList {
     private String id;
 
     private String email; // email of the user
-
-
 }

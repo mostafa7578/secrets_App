@@ -26,7 +26,7 @@ public class UserService {
     private BlackListRepository blackListRepository;
 
     @Autowired
-    private LoginUsersRepository loginUsers;
+    private LoginUsersRepository loginUsersRepository;
 
     Integer otp1 = 836295;
     Integer otp2 = 638046;
@@ -68,11 +68,11 @@ public class UserService {
                     if (blackList.isPresent()) {
                         return "User is blacklisted";
                     }
-                    Optional<LoginUser> login = loginUsers.findByOtp(userDTO.getEmail());
+                    Optional<LoginUser> login = loginUsersRepository.findByOtp(userDTO.getEmail());
                     if (login.isPresent()) {
                         return "User is already logged in";
                     }
-                    loginUsers.save(LoginUser.builder().otp(userDTO.getOtp()).build());
+                    loginUsersRepository.save(LoginUser.builder().otp(userDTO.getOtp()).email(userDTO.getEmail()).build());
                     return "User logged in successfully";
                 }
             }
@@ -82,9 +82,9 @@ public class UserService {
     }
 
     public String logout(UserDTO userDTO) {
-        Optional<LoginUser> login = loginUsers.findByOtp(userDTO.getOtp());
+        Optional<LoginUser> login = loginUsersRepository.findByOtp(userDTO.getOtp());
         if (login.isPresent()) {
-            loginUsers.delete(login.get());
+            loginUsersRepository.delete(login.get());
             return "User logged out successfully";
         }
         return "Invalid OTP";

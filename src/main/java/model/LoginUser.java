@@ -18,4 +18,6 @@ public class LoginUser {
     private String id;
 
     private String otp; // email of the user
+
+    private String email; // email of the user
 }

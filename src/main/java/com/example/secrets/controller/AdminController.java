@@ -33,7 +33,7 @@ public class AdminController {
         return adminService.blockUser(email);
     }
 
-    @GetMapping("/users")
+    @GetMapping("/users")   
     public ResponseEntity<List<LoginUser>> users() {
         return adminService.users();
     }
