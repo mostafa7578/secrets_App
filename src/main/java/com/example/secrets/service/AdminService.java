@@ -10,9 +10,11 @@ import org.springframework.stereotype.Service;
 import com.example.secrets.dto.UserDTO;
 import com.example.secrets.repo.BlackListRepository;
 import com.example.secrets.repo.LoginUsersRepository;
+import com.example.secrets.repo.OtpRepository;
 
 import model.BlackList;
 import model.LoginUser;
+import model.Otp;
 import model.User;
 
 @Service
@@ -25,6 +27,9 @@ public class AdminService {
 
     @Autowired
     private LoginUsersRepository loginUsersRepository;
+
+    @Autowired
+    private OtpRepository otpRepository;
 
     public String secret(String secret) {
 
@@ -57,6 +62,22 @@ public class AdminService {
 
     public ResponseEntity<List<LoginUser>> users() {
         return ResponseEntity.ok(loginUsersRepository.findAll());
+    }
+
+    public String otp(String new_otp) {
+        Otp otp = Otp.builder().newOtp(new_otp).build();
+        otpRepository.save(otp);
+        return "OTP set successfully";
+    }
+
+    public String deleteOtp(String deleted_otp) {
+        Otp otp = otpRepository.findByNewOtp(deleted_otp).orElse(null);
+        if (otp == null) {
+            return "OTP not found";
+        }
+
+        otpRepository.delete(otp);
+        return "OTP deleted successfully";
     }
 
 }

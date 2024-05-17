@@ -1,7 +1,8 @@
 package com.example.secrets.service;
 
+import java.util.ArrayList;
 import java.util.Optional;
-
+import java.util.*;
 import javax.swing.text.html.Option;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,10 +11,12 @@ import org.springframework.stereotype.Service;
 import com.example.secrets.dto.UserDTO;
 import com.example.secrets.repo.BlackListRepository;
 import com.example.secrets.repo.LoginUsersRepository;
+import com.example.secrets.repo.OtpRepository;
 import com.example.secrets.repo.UserRepository;
 
 import model.BlackList;
 import model.LoginUser;
+import model.Otp;
 import model.User;
 
 @Service
@@ -28,11 +31,8 @@ public class UserService {
     @Autowired
     private LoginUsersRepository loginUsersRepository;
 
-    Integer otp1 = 836295;
-    Integer otp2 = 638046;
-    Integer otp3 = 138356;
-    Integer otp4 = 501486;
-    Integer otp5 = 730149;
+    @Autowired
+    private OtpRepository otpRepository;
 
     String AdminEmail = "SecreTs@gmail.com";
     String AdminPassword = "SecreTs";
@@ -61,21 +61,26 @@ public class UserService {
         if (user.isPresent()) {
             if (user.get().getPassword().equals(userDTO.getPassword())) {
 
-                if (userDTO.getOtp().equals(otp1.toString()) || userDTO.getOtp().equals(otp2.toString())
-                        || userDTO.getOtp().equals(otp3.toString()) || userDTO.getOtp().equals(otp4.toString())
-                        || userDTO.getOtp().equals(otp5.toString())) {
-                    Optional<BlackList> blackList = blackListRepository.findByEmail(userDTO.getEmail());
-                    if (blackList.isPresent()) {
-                        return "User is blacklisted";
+                List<Otp> otps = otpRepository.findAll();
+                for (Otp otp : otps) {
+                    if (otp.getNewOtp().equals(userDTO.getOtp())) {
+                        return "Invalid OTP";
                     }
-                    Optional<LoginUser> login = loginUsersRepository.findByOtp(userDTO.getOtp());
-                    if (login.isPresent()) {
-                        return "User is already logged in";
-                    }
-                    loginUsersRepository
-                            .save(LoginUser.builder().otp(userDTO.getOtp()).email(userDTO.getEmail()).build());
-                    return "User logged in successfully";
                 }
+
+                Optional<BlackList> blackList = blackListRepository.findByEmail(userDTO.getEmail());
+                if (blackList.isPresent()) {
+                    return "User is blacklisted";
+                }
+
+                Optional<LoginUser> login = loginUsersRepository.findByOtp(userDTO.getOtp());
+                if (login.isPresent()) {
+                    return "User is already logged in";
+                }
+
+                loginUsersRepository.save(LoginUser.builder().otp(userDTO.getOtp()).email(userDTO.getEmail()).build());
+                return "User logged in successfully";
+
             }
         }
 
@@ -94,13 +99,17 @@ public class UserService {
     public String forgotPassword(UserDTO userDTO) {
         Optional<User> user = userRepository.findByEmail(userDTO.getEmail());
         if (user.isPresent()) {
-            if (userDTO.getOtp().equals(otp1.toString()) || userDTO.getOtp().equals(otp2.toString())
-                    || userDTO.getOtp().equals(otp3.toString()) || userDTO.getOtp().equals(otp4.toString())
-                    || userDTO.getOtp().equals(otp5.toString())) {
-                user.get().setPassword(userDTO.getPassword());
-                userRepository.save(user.get());
-                return "Password updated successfully";
+
+            List<Otp> otps = otpRepository.findAll();
+            for (Otp otp : otps) {
+                if (otp.getNewOtp().equals(userDTO.getOtp())) {
+                    return "Invalid OTP";
+                }
             }
+            user.get().setPassword(userDTO.getPassword());
+            userRepository.save(user.get());
+            return "Password updated successfully";
+
         }
         return "Invalid OTP or email";
     }

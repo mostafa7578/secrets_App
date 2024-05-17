@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -36,5 +37,15 @@ public class AdminController {
     @GetMapping("/users")   
     public ResponseEntity<List<LoginUser>> users() {
         return adminService.users();
+    }
+
+    @PostMapping("/otp")
+    public String otp(@RequestBody String new_otp) {
+        return adminService.otp(new_otp);
+    }
+
+    @DeleteMapping("/otp")
+    public String deleteOtp(@RequestBody String deleted_otp) {
+        return adminService.deleteOtp(deleted_otp);
     }
 }
